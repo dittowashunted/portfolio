@@ -1,7 +1,10 @@
 export const profile = {
   name: "Ditto",
-  tagline: "Building things and breaking things, mostly on purpose.",
-  bio: "Welcome to my corner of the internet. I work on a mix of software projects — check out what I've been building below, or get in touch.",
+  status: "Available for new projects",
+  headlineTop: "Building Ideas",
+  headlineBottom: "Into Software.",
+  subtext:
+    "I work on a mix of software projects — tools, bots, and experiments — and ship things that actually get used.",
 };
 
 export const links = {
