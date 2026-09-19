@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Lenis from 'lenis'
 import {
   profile,
   stats,
@@ -12,36 +13,54 @@ import {
 } from './data'
 import './App.css'
 
-function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+const prefersReducedMotion =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+let lenis = null
+
+function useLenis() {
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined
+
+    lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+      smoothWheel: true,
+      autoResize: false,
+    })
+
+    let rafId
+    const raf = (time) => {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    }
+    rafId = requestAnimationFrame(raf)
+
+    const onWindowResize = () => lenis?.resize()
+    window.addEventListener('resize', onWindowResize)
+
+    return () => {
+      window.removeEventListener('resize', onWindowResize)
+      cancelAnimationFrame(rafId)
+      lenis.destroy()
+      lenis = null
+    }
+  }, [])
 }
 
 function smoothScrollTo(hash) {
   const target = document.querySelector(hash)
   if (!target) return
-  const startY = window.scrollY
-  const navOffset = 90
-  const targetY =
-    target.getBoundingClientRect().top + window.scrollY - navOffset
-  const distance = targetY - startY
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    window.scrollTo({ top: targetY, behavior: 'auto' })
+  if (lenis) {
+    lenis.scrollTo(target, { offset: -90, duration: 1.1 })
     return
   }
 
-  const duration = 700
-  const start = performance.now()
-
-  const step = (now) => {
-    const progress = Math.min((now - start) / duration, 1)
-    window.scrollTo({
-      top: startY + distance * easeInOutCubic(progress),
-      behavior: 'auto',
-    })
-    if (progress < 1) requestAnimationFrame(step)
-  }
-  requestAnimationFrame(step)
+  const navOffset = 90
+  const targetY = target.getBoundingClientRect().top + window.scrollY - navOffset
+  window.scrollTo({ top: targetY, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
 }
 
 function useMagnetic(strength = 14) {
@@ -219,10 +238,10 @@ function useReveal() {
   return ref
 }
 
-function Reveal({ as: Tag = 'div', className = '', children }) {
+function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
   const ref = useReveal()
   return (
-    <Tag ref={ref} className={`reveal ${className}`}>
+    <Tag ref={ref} className={`reveal ${className}`} {...rest}>
       {children}
     </Tag>
   )
@@ -313,6 +332,8 @@ function CopyContact({ contact }) {
 }
 
 function App() {
+  useLenis()
+
   return (
     <>
       <GrainOverlay />
