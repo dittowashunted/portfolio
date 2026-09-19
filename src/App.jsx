@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { profile, links, projects } from './data'
+import { profile, links, projects, skills } from './data'
 import './App.css'
 
 function useReveal() {
@@ -42,6 +42,7 @@ function App() {
         <span className="brand">{profile.name}.</span>
         <div className="nav-links">
           <a href="#about">About</a>
+          <a href="#skills">Skills</a>
           <a href="#projects">Work</a>
           <a href="#contact">Contact</a>
         </div>
@@ -70,6 +71,14 @@ function App() {
         </div>
       </header>
 
+      <div className="marquee">
+        <div className="marquee-track">
+          {Array(2).fill(skills).flat().map((skill, i) => (
+            <span key={i}>{skill.title}</span>
+          ))}
+        </div>
+      </div>
+
       <main>
         <Reveal as="section" className="about-section">
           <h2 id="about">About</h2>
@@ -79,6 +88,24 @@ function App() {
             collects what I've been building, along with ways to reach me.
           </p>
         </Reveal>
+
+        <section id="skills" className="skills-section">
+          <Reveal as="h2">What I Do</Reveal>
+          <div className="skills-grid">
+            {skills.map((skill, i) => (
+              <Reveal className="skill-card" key={skill.title}>
+                <span className="skill-index">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{skill.title}</h3>
+                <p>{skill.description}</p>
+                <div className="tags">
+                  {skill.tags.map((tag) => (
+                    <span key={tag} className="tag">{tag}</span>
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
 
         <section id="projects" className="projects-section">
           <Reveal as="h2">Selected Work</Reveal>
