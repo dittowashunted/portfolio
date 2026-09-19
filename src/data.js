@@ -1,10 +1,10 @@
 export const profile = {
   name: "Ditto",
-  status: "Available for new projects",
-  headlineTop: "Building Ideas",
-  headlineBottom: "Into Software.",
+  status: "A collection of things I've made",
+  headlineTop: "Ideas, Made",
+  headlineBottom: "Into Reality.",
   subtext:
-    "I work on a mix of software projects — tools, bots, and experiments — and ship things that actually get used.",
+    "A running archive of what I build — software, design, and edits, made because I wanted to make them.",
 };
 
 export const skills = [

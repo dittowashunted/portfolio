@@ -74,7 +74,7 @@ function App() {
           <a href="#projects">Work</a>
           <a href="#contact">Contact</a>
         </div>
-        <a className="nav-cta" href="#contact">Let's Talk</a>
+        <a className="nav-cta" href="#projects">View Work</a>
       </nav>
 
       <header className="hero">
@@ -89,8 +89,8 @@ function App() {
           </h1>
           <p className="subtext">{profile.subtext}</p>
           <div className="cta-row">
-            <a className="btn-primary" href="#projects">See My Work</a>
-            <a className="btn-secondary" href={`mailto:${links.email}`}>Contact Me</a>
+            <a className="btn-primary" href="#projects">Explore the Work</a>
+            <a className="btn-secondary" href="#about">About Me</a>
           </div>
         </div>
         <div className="scroll-hint">
@@ -111,14 +111,13 @@ function App() {
         <Reveal as="section" className="about-section">
           <h2 id="about">About</h2>
           <p>
-            Welcome to my corner of the internet. I'm {profile.name} — I build software
-            because I like solving problems and making things that work well. This page
-            collects what I've been building, along with ways to reach me.
+            I'm {profile.name}. This is where I keep track of what I've made — software,
+            designs, edits, whatever I've been into. No pitch, just the work.
           </p>
         </Reveal>
 
         <section id="skills" className="skills-section">
-          <Reveal as="h2">What I Do</Reveal>
+          <Reveal as="h2">Skills</Reveal>
           <div className="skills-grid">
             {skills.map((skill, i) => (
               <Reveal className="skill-card" key={skill.title}>
@@ -161,8 +160,7 @@ function App() {
         </section>
 
         <Reveal as="section" id="contact" className="contact-section">
-          <h2>Get In Touch</h2>
-          <p>Have a project in mind, or just want to say hi? I'm around.</p>
+          <h2>Find Me Elsewhere</h2>
           <div className="links">
             <a href={links.github} target="_blank" rel="noreferrer">GitHub</a>
             <a href={`mailto:${links.email}`}>Email</a>
