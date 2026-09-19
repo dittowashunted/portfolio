@@ -24,12 +24,21 @@ function smoothScrollTo(hash) {
   const targetY =
     target.getBoundingClientRect().top + window.scrollY - navOffset
   const distance = targetY - startY
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo({ top: targetY, behavior: 'auto' })
+    return
+  }
+
   const duration = 700
   const start = performance.now()
 
   const step = (now) => {
     const progress = Math.min((now - start) / duration, 1)
-    window.scrollTo(0, startY + distance * easeInOutCubic(progress))
+    window.scrollTo({
+      top: startY + distance * easeInOutCubic(progress),
+      behavior: 'auto',
+    })
     if (progress < 1) requestAnimationFrame(step)
   }
   requestAnimationFrame(step)
@@ -163,19 +172,22 @@ function Navbar() {
 
 function GlowHeadline() {
   const [glowing, setGlowing] = useState(false)
+  const ref = useRef(null)
   const timeoutRef = useRef(null)
 
   const handleClick = () => {
+    const hue = Math.floor(Math.random() * 360)
+    ref.current?.style.setProperty('--glow-hue', hue)
     setGlowing(false)
     requestAnimationFrame(() => {
       setGlowing(true)
       clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(() => setGlowing(false), 900)
+      timeoutRef.current = setTimeout(() => setGlowing(false), 1100)
     })
   }
 
   return (
-    <h1 className={glowing ? 'glow-pulse' : ''} onClick={handleClick}>
+    <h1 ref={ref} className={glowing ? 'glow-pulse' : ''} onClick={handleClick}>
       {profile.headlineTop}
       <br />
       <em>{profile.headlineBottom}</em>
@@ -185,19 +197,6 @@ function GlowHeadline() {
 
 function GrainOverlay() {
   return <div className="grain-overlay" />
-}
-
-function CornerMarks() {
-  return (
-    <div className="corner-marks">
-      <span className="corner corner-tl">DITTO.DEV</span>
-      <span className="corner corner-tr">
-        <span className="corner-dot" /> ONLINE
-      </span>
-      <span className="corner corner-bl">{profile.location.toUpperCase()}</span>
-      <span className="corner corner-br">SCROLL TO EXPLORE</span>
-    </div>
-  )
 }
 
 function useReveal() {
@@ -317,7 +316,6 @@ function App() {
   return (
     <>
       <GrainOverlay />
-      <CornerMarks />
       <CursorGlow />
       <div className="shape shape-square" />
       <div className="shape shape-circle" />
@@ -336,7 +334,6 @@ function App() {
           </span>
           <GlowHeadline />
           <p className="subtext">{profile.subtext}</p>
-          <p className="glow-hint">psst, try clicking the title</p>
           <div className="cta-row">
             <MagneticLink className="btn-primary" href="#projects">Explore the Work</MagneticLink>
             <MagneticLink className="btn-secondary" href="#about">About Me</MagneticLink>
