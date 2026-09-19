@@ -31,9 +31,37 @@ function Reveal({ as: Tag = 'div', className = '', children }) {
   )
 }
 
+function CursorGlow() {
+  const ref = useRef(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const onMove = (e) => {
+      el.style.setProperty('--cursor-x', `${e.clientX}px`)
+      el.style.setProperty('--cursor-y', `${e.clientY}px`)
+      el.style.opacity = '1'
+    }
+    const onLeave = () => {
+      el.style.opacity = '0'
+    }
+    window.addEventListener('mousemove', onMove)
+    document.documentElement.addEventListener('mouseleave', onLeave)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      document.documentElement.removeEventListener('mouseleave', onLeave)
+    }
+  }, [])
+  return <div ref={ref} className="cursor-glow" />
+}
+
 function App() {
   return (
     <>
+      <CursorGlow />
+      <div className="shape shape-square" />
+      <div className="shape shape-circle" />
+      <div className="shape shape-pill" />
+      <div className="shape shape-diamond" />
       <div className="blob blob-a" />
       <div className="blob blob-b" />
       <div className="blob blob-c" />
