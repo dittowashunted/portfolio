@@ -35,9 +35,35 @@ function smoothScrollTo(hash) {
   requestAnimationFrame(step)
 }
 
-function NavLink({ href, children, className }) {
+function useMagnetic(strength = 14) {
+  const ref = useRef(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const onMove = (e) => {
+      const rect = el.getBoundingClientRect()
+      const x = e.clientX - rect.left - rect.width / 2
+      const y = e.clientY - rect.top - rect.height / 2
+      el.style.transform = `translate(${(x / rect.width) * strength}px, ${(y / rect.height) * strength}px)`
+    }
+    const onLeave = () => {
+      el.style.transform = 'translate(0, 0)'
+    }
+    el.addEventListener('mousemove', onMove)
+    el.addEventListener('mouseleave', onLeave)
+    return () => {
+      el.removeEventListener('mousemove', onMove)
+      el.removeEventListener('mouseleave', onLeave)
+    }
+  }, [strength])
+  return ref
+}
+
+function MagneticLink({ href, children, className }) {
+  const ref = useMagnetic()
   return (
     <a
+      ref={ref}
       href={href}
       className={className}
       onClick={(e) => {
@@ -47,6 +73,130 @@ function NavLink({ href, children, className }) {
     >
       {children}
     </a>
+  )
+}
+
+const NAV_ITEMS = [
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'projects', label: 'Work' },
+  { id: 'contact', label: 'Contact' },
+]
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const [active, setActive] = useState('about')
+  const linkRefs = useRef({})
+  const highlightRef = useRef(null)
+  const lastY = useRef(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 40)
+      setHidden(y > lastY.current && y > 160)
+      lastY.current = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id)
+        })
+      },
+      { rootMargin: '-40% 0px -50% 0px', threshold: 0 }
+    )
+    NAV_ITEMS.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const moveHighlight = () => {
+      const el = linkRefs.current[active]
+      const highlight = highlightRef.current
+      if (el && highlight) {
+        highlight.style.width = `${el.offsetWidth}px`
+        highlight.style.height = `${el.offsetHeight}px`
+        highlight.style.transform = `translate(${el.offsetLeft}px, ${el.offsetTop}px)`
+        highlight.style.opacity = '1'
+      }
+    }
+    moveHighlight()
+    window.addEventListener('resize', moveHighlight)
+    return () => window.removeEventListener('resize', moveHighlight)
+  }, [active])
+
+  return (
+    <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''} ${hidden ? 'navbar-hidden' : ''}`}>
+      <span className="brand">{profile.name}.</span>
+      <div className="nav-links">
+        <span ref={highlightRef} className="nav-highlight" />
+        {NAV_ITEMS.map(({ id, label }) => (
+          <a
+            key={id}
+            ref={(node) => {
+              linkRefs.current[id] = node
+            }}
+            href={`#${id}`}
+            className={active === id ? 'active' : ''}
+            onClick={(e) => {
+              e.preventDefault()
+              smoothScrollTo(`#${id}`)
+            }}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+      <MagneticLink className="nav-cta" href="#projects">View Work</MagneticLink>
+    </nav>
+  )
+}
+
+function GlowHeadline() {
+  const [glowing, setGlowing] = useState(false)
+  const timeoutRef = useRef(null)
+
+  const handleClick = () => {
+    setGlowing(false)
+    requestAnimationFrame(() => {
+      setGlowing(true)
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setGlowing(false), 900)
+    })
+  }
+
+  return (
+    <h1 className={glowing ? 'glow-pulse' : ''} onClick={handleClick}>
+      {profile.headlineTop}
+      <br />
+      <em>{profile.headlineBottom}</em>
+    </h1>
+  )
+}
+
+function GrainOverlay() {
+  return <div className="grain-overlay" />
+}
+
+function CornerMarks() {
+  return (
+    <div className="corner-marks">
+      <span className="corner corner-tl">DITTO.DEV</span>
+      <span className="corner corner-tr">
+        <span className="corner-dot" /> ONLINE
+      </span>
+      <span className="corner corner-bl">{profile.location.toUpperCase()}</span>
+      <span className="corner corner-br">SCROLL TO EXPLORE</span>
+    </div>
   )
 }
 
@@ -166,6 +316,8 @@ function CopyContact({ contact }) {
 function App() {
   return (
     <>
+      <GrainOverlay />
+      <CornerMarks />
       <CursorGlow />
       <div className="shape shape-square" />
       <div className="shape shape-circle" />
@@ -175,31 +327,19 @@ function App() {
       <div className="blob blob-b" />
       <div className="blob blob-c" />
 
-      <nav className="navbar">
-        <span className="brand">{profile.name}.</span>
-        <div className="nav-links">
-          <NavLink href="#about">About</NavLink>
-          <NavLink href="#skills">Skills</NavLink>
-          <NavLink href="#projects">Work</NavLink>
-          <NavLink href="#contact">Contact</NavLink>
-        </div>
-        <NavLink className="nav-cta" href="#projects">View Work</NavLink>
-      </nav>
+      <Navbar />
 
       <header className="hero">
         <div className="hero-inner">
           <span className="badge">
             <span className="badge-dot" /> {profile.status}
           </span>
-          <h1>
-            {profile.headlineTop}
-            <br />
-            <em>{profile.headlineBottom}</em>
-          </h1>
+          <GlowHeadline />
           <p className="subtext">{profile.subtext}</p>
+          <p className="glow-hint">psst, try clicking the title</p>
           <div className="cta-row">
-            <NavLink className="btn-primary" href="#projects">Explore the Work</NavLink>
-            <NavLink className="btn-secondary" href="#about">About Me</NavLink>
+            <MagneticLink className="btn-primary" href="#projects">Explore the Work</MagneticLink>
+            <MagneticLink className="btn-secondary" href="#about">About Me</MagneticLink>
           </div>
         </div>
         <div className="scroll-hint">
@@ -284,15 +424,14 @@ function App() {
                   {skillLevels.map((skill) => (
                     <div className="skill-bar-row" key={skill.title}>
                       <span>{skill.title}</span>
-                      <span className="stars">
-                        {Array.from({ length: 5 }, (_, i) => (
-                          <span
-                            key={i}
-                            className={i < skill.stars ? 'star-filled' : 'star-empty'}
-                          >
-                            ★
-                          </span>
-                        ))}
+                      <span className="stars-wrap">
+                        <span className="stars-empty">★★★★★</span>
+                        <span
+                          className="stars-filled"
+                          style={{ width: `${(skill.stars / 5) * 100}%` }}
+                        >
+                          ★★★★★
+                        </span>
                       </span>
                     </div>
                   ))}

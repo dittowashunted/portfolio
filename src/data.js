@@ -56,16 +56,17 @@ export const skills = [
 ];
 
 export const skillLevels = [
-  { title: "Graphic Design", stars: 5 },
-  { title: "Video Editing", stars: 4 },
-  { title: "Coding & Scripting", stars: 4 },
+  { title: "Graphic Design", stars: 4 },
+  { title: "Video Editing", stars: 5 },
+  { title: "Coding & Scripting", stars: 4.5 },
 ];
 
 export const tools = [
   "Photoshop",
   "Illustrator",
   "Premiere Pro",
-  "DaVinci Resolve",
+  "After Effects",
+  "Lightroom",
   "VS Code",
   "Roblox Studio",
 ];
