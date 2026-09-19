@@ -4,14 +4,14 @@ export const profile = {
   headlineTop: "Ideas, Made",
   headlineBottom: "Into Reality.",
   subtext:
-    "A running archive of what I build — software, design, and edits, made because I wanted to make them.",
+    "A running archive of what I build: software, design, and edits, made because I wanted to make them.",
   location: "Canada",
   avatar: "/nagumo.jpeg",
   bioShort:
-    "Self-taught creator working across video editing, graphic design, and code — based in Canada.",
+    "Self-taught creator working across video editing, graphic design, and code, based in Canada.",
   bioLong: [
-    "I started out making my own YouTube videos in early 2024, then moved into freelance editing — cutting a video for a creator with 1K subscribers that became their most-viewed upload. From there I grew my own channel to 5,000+ subscribers in just a few months.",
-    "In 2025 I taught myself to code, building my own tools and projects and contributing as a developer on a Roblox game. That same year I picked up graphic design, and now split my time between all three — editing, design, and coding.",
+    "I started out making my own YouTube videos in early 2024, then moved into freelance editing, cutting a video for a creator with 1K subscribers that became their most-viewed upload. From there I grew my own channel to 5,000+ subscribers in just a few months.",
+    "In 2025 I taught myself to code, building my own tools and projects and contributing as a developer on a Roblox game. That same year I picked up graphic design, and now split my time between all three: editing, design, and coding.",
   ],
 };
 
@@ -25,7 +25,7 @@ export const stats = [
 export const skills = [
   {
     title: "Graphic Design",
-    description: "Bold, clean visuals — branding, layouts, and graphics that stand out.",
+    description: "Bold, clean visuals: branding, layouts, and graphics that stand out.",
     tags: ["Photoshop", "Illustrator", "Figma"],
   },
   {
@@ -55,6 +55,26 @@ export const skills = [
   },
 ];
 
+export const skillLevels = [
+  { title: "Graphic Design", stars: 5 },
+  { title: "Video Editing", stars: 4 },
+  { title: "Coding & Scripting", stars: 4 },
+];
+
+export const tools = [
+  "Photoshop",
+  "Illustrator",
+  "Premiere Pro",
+  "DaVinci Resolve",
+  "VS Code",
+  "Roblox Studio",
+];
+
+export const languages = [
+  { name: "English", level: "Fluent" },
+  { name: "French", level: "Basic" },
+];
+
 export const experience = [
   {
     title: "Graphic Design",
@@ -81,41 +101,35 @@ export const experience = [
     place: "Edited for a 1K-subscriber creator",
     dates: "2024",
   },
-  {
-    title: "Started Making Videos",
-    place: "Personal YouTube channel",
-    dates: "Jan 2024 — Apr 2024",
-  },
 ];
 
 export const links = {
-  github: "https://github.com/dittowashunted",
+  discord: "dittowashunted",
   email: "dittodoestuff@gmail.com",
-  steam: "https://steamcommunity.com/id/DittoHunter/",
+  github: "https://github.com/dittowashunted",
 };
 
 export const contacts = [
-  { label: "GitHub", value: "dittowashunted", href: links.github },
+  { label: "Discord", value: "dittowashunted" },
   { label: "Email", value: links.email, href: `mailto:${links.email}` },
-  { label: "Steam", value: "DittoHunter", href: links.steam },
 ];
 
 export const projects = [
   {
     title: "Project One",
-    description: "A short description of this project goes here — what it does and why you built it.",
+    description: "A short description of this project goes here: what it does and why you built it.",
     tags: ["JavaScript", "React"],
     link: "https://github.com/dittowashunted",
   },
   {
     title: "Project Two",
-    description: "A short description of this project goes here — what it does and why you built it.",
+    description: "A short description of this project goes here: what it does and why you built it.",
     tags: ["Python"],
     link: "https://github.com/dittowashunted",
   },
   {
     title: "Project Three",
-    description: "A short description of this project goes here — what it does and why you built it.",
+    description: "A short description of this project goes here: what it does and why you built it.",
     tags: ["Discord Bot"],
     link: "https://github.com/dittowashunted",
   },

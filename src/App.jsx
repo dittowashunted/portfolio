@@ -1,6 +1,54 @@
 import { useEffect, useRef, useState } from 'react'
-import { profile, stats, skills, experience, links, contacts, projects } from './data'
+import {
+  profile,
+  stats,
+  skills,
+  skillLevels,
+  tools,
+  languages,
+  experience,
+  contacts,
+  projects,
+} from './data'
 import './App.css'
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
+function smoothScrollTo(hash) {
+  const target = document.querySelector(hash)
+  if (!target) return
+  const startY = window.scrollY
+  const navOffset = 90
+  const targetY =
+    target.getBoundingClientRect().top + window.scrollY - navOffset
+  const distance = targetY - startY
+  const duration = 700
+  const start = performance.now()
+
+  const step = (now) => {
+    const progress = Math.min((now - start) / duration, 1)
+    window.scrollTo(0, startY + distance * easeInOutCubic(progress))
+    if (progress < 1) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+function NavLink({ href, children, className }) {
+  return (
+    <a
+      href={href}
+      className={className}
+      onClick={(e) => {
+        e.preventDefault()
+        smoothScrollTo(href)
+      }}
+    >
+      {children}
+    </a>
+  )
+}
 
 function useReveal() {
   const ref = useRef(null)
@@ -91,6 +139,30 @@ function Counter({ value, suffix = '', duration = 1400 }) {
   )
 }
 
+function CopyContact({ contact }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(contact.value)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // clipboard unavailable, ignore
+    }
+  }
+
+  return (
+    <button type="button" className="contact-card" onClick={handleCopy}>
+      <div>
+        <span className="contact-label">{contact.label}</span>
+        <span className="contact-value">{contact.value}</span>
+      </div>
+      <span className="contact-arrow">{copied ? 'Copied' : 'Copy'}</span>
+    </button>
+  )
+}
+
 function App() {
   return (
     <>
@@ -106,12 +178,12 @@ function App() {
       <nav className="navbar">
         <span className="brand">{profile.name}.</span>
         <div className="nav-links">
-          <a href="#about">About</a>
-          <a href="#skills">Skills</a>
-          <a href="#projects">Work</a>
-          <a href="#contact">Contact</a>
+          <NavLink href="#about">About</NavLink>
+          <NavLink href="#skills">Skills</NavLink>
+          <NavLink href="#projects">Work</NavLink>
+          <NavLink href="#contact">Contact</NavLink>
         </div>
-        <a className="nav-cta" href="#projects">View Work</a>
+        <NavLink className="nav-cta" href="#projects">View Work</NavLink>
       </nav>
 
       <header className="hero">
@@ -126,8 +198,8 @@ function App() {
           </h1>
           <p className="subtext">{profile.subtext}</p>
           <div className="cta-row">
-            <a className="btn-primary" href="#projects">Explore the Work</a>
-            <a className="btn-secondary" href="#about">About Me</a>
+            <NavLink className="btn-primary" href="#projects">Explore the Work</NavLink>
+            <NavLink className="btn-secondary" href="#about">About Me</NavLink>
           </div>
         </div>
         <div className="scroll-hint">
@@ -192,16 +264,62 @@ function App() {
 
         <section id="experience" className="experience-section">
           <Reveal as="h2">Where I've Been</Reveal>
-          <div className="timeline">
-            {experience.map((item) => (
-              <Reveal className="timeline-item" key={item.title}>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.place}</p>
+          <div className="experience-grid">
+            <div className="timeline">
+              {experience.map((item) => (
+                <Reveal className="timeline-item" key={item.title}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.place}</p>
+                  </div>
+                  <span className="timeline-dates">{item.dates}</span>
+                </Reveal>
+              ))}
+            </div>
+
+            <div className="side-panels">
+              <Reveal className="side-panel">
+                <span className="side-panel-label">Skill Level</span>
+                <div className="skill-bars">
+                  {skillLevels.map((skill) => (
+                    <div className="skill-bar-row" key={skill.title}>
+                      <span>{skill.title}</span>
+                      <span className="stars">
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <span
+                            key={i}
+                            className={i < skill.stars ? 'star-filled' : 'star-empty'}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-                <span className="timeline-dates">{item.dates}</span>
               </Reveal>
-            ))}
+
+              <Reveal className="side-panel">
+                <span className="side-panel-label">Tools I Use</span>
+                <div className="tags">
+                  {tools.map((tool) => (
+                    <span key={tool} className="tag">{tool}</span>
+                  ))}
+                </div>
+              </Reveal>
+
+              <Reveal className="side-panel">
+                <span className="side-panel-label">Languages</span>
+                <div className="language-list">
+                  {languages.map((lang) => (
+                    <div className="language-row" key={lang.name}>
+                      <span>{lang.name}</span>
+                      <span className="language-level">{lang.level}</span>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
           </div>
         </section>
 
@@ -231,23 +349,27 @@ function App() {
         </section>
 
         <Reveal as="section" id="contact" className="contact-section">
-          <h2>Find Me Elsewhere</h2>
+          <h2>Find Me</h2>
           <div className="contact-grid">
-            {contacts.map((contact) => (
-              <a
-                className="contact-card"
-                key={contact.label}
-                href={contact.href}
-                target={contact.href.startsWith('http') ? '_blank' : undefined}
-                rel="noreferrer"
-              >
-                <div>
-                  <span className="contact-label">{contact.label}</span>
-                  <span className="contact-value">{contact.value}</span>
-                </div>
-                <span className="contact-arrow">&#8599;</span>
-              </a>
-            ))}
+            {contacts.map((contact) =>
+              contact.href ? (
+                <a
+                  className="contact-card"
+                  key={contact.label}
+                  href={contact.href}
+                  target={contact.href.startsWith('http') ? '_blank' : undefined}
+                  rel="noreferrer"
+                >
+                  <div>
+                    <span className="contact-label">{contact.label}</span>
+                    <span className="contact-value">{contact.value}</span>
+                  </div>
+                  <span className="contact-arrow">&#8599;</span>
+                </a>
+              ) : (
+                <CopyContact key={contact.label} contact={contact} />
+              )
+            )}
           </div>
         </Reveal>
       </main>
