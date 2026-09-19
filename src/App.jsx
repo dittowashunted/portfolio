@@ -317,17 +317,17 @@ function App() {
     <>
       <GrainOverlay />
       <CursorGlow />
-      <div className="shape shape-square" />
-      <div className="shape shape-circle" />
-      <div className="shape shape-pill" />
-      <div className="shape shape-diamond" />
-      <div className="blob blob-a" />
-      <div className="blob blob-b" />
-      <div className="blob blob-c" />
 
       <Navbar />
 
       <header className="hero">
+        <div className="shape shape-square" />
+        <div className="shape shape-circle" />
+        <div className="shape shape-pill" />
+        <div className="shape shape-diamond" />
+        <div className="blob blob-a" />
+        <div className="blob blob-b" />
+        <div className="blob blob-c" />
         <div className="hero-inner">
           <span className="badge">
             <span className="badge-dot" /> {profile.status}

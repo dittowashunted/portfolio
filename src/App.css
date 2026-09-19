@@ -17,7 +17,7 @@ html {
   scroll-padding-top: 6rem;
 }
 
-/* Shared card treatment: subtle grid texture + animated gradient border on hover */
+/* Shared card treatment: liquid glass + animated gradient border on hover */
 .skill-card,
 .project-card-inner,
 .timeline-item,
@@ -26,10 +26,10 @@ html {
 .contact-card {
   position: relative;
   isolation: isolate;
-  background-color: var(--bg-card);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 26px 26px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), inset 0 -1px 12px rgba(0, 0, 0, 0.25);
 }
 
 .skill-card::before,
@@ -74,7 +74,10 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 88px 88px;
   color: var(--text);
   font-family: var(--sans);
   overflow-x: hidden;
@@ -114,7 +117,7 @@ body {
 
 /* Decorative floating shapes */
 .shape {
-  position: fixed;
+  position: absolute;
   z-index: -1;
   pointer-events: none;
   background: linear-gradient(155deg, #232327, #0c0c0e 70%);
@@ -180,7 +183,7 @@ body {
 
 /* Decorative background blobs */
 .blob {
-  position: fixed;
+  position: absolute;
   border-radius: 50%;
   filter: blur(80px);
   opacity: 0.18;
@@ -236,10 +239,12 @@ body {
   max-width: 1100px;
   margin: 1.5rem auto 0;
   padding: 0.75rem 1.5rem;
-  background: rgba(20, 20, 23, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 999px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 12px 30px rgba(0, 0, 0, 0.25);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s ease,
     margin 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
@@ -247,8 +252,8 @@ body {
 .navbar-scrolled {
   margin-top: 0.75rem;
   padding: 0.5rem 1.25rem;
-  background: rgba(12, 12, 14, 0.88);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.13), rgba(20, 20, 23, 0.55));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.14), 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-hidden {
@@ -317,6 +322,8 @@ body {
 
 /* Hero */
 .hero {
+  position: relative;
+  overflow: hidden;
   min-height: 90vh;
   display: flex;
   flex-direction: column;
