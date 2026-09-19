@@ -12,6 +12,7 @@ export const profile = {
   bioLong: [
     "I started out making my own YouTube videos in early 2024, then moved into freelance editing, cutting a video for a creator with 1K subscribers that became their most-viewed upload. From there I grew my own channel to 5,000+ subscribers in just a few months.",
     "In 2025 I taught myself to code, building my own tools and projects and contributing as a developer on a Roblox game. That same year I picked up graphic design, and now split my time between all three: editing, design, and coding.",
+    "Right now I'm looking to build up more experience, so I'm open to taking on work at a low cost. If you've got something in mind, reach out.",
   ],
 };
 
