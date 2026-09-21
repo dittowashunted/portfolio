@@ -982,10 +982,3 @@ main h2 {
   font-size: 1.1rem;
 }
 
-footer {
-  text-align: center;
-  padding: 2.5rem 1.5rem;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  border-top: 1px solid var(--border);
-}

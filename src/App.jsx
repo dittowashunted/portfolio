@@ -531,9 +531,6 @@ function App() {
         </Reveal>
       </main>
 
-      <footer>
-        <p>&copy; {new Date().getFullYear()} {profile.name}</p>
-      </footer>
     </>
   )
 }

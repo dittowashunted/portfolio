@@ -118,10 +118,10 @@ export const contacts = [
 
 export const projects = [
   {
-    title: "Project One",
-    description: "A short description of this project goes here: what it does and why you built it.",
-    tags: ["JavaScript", "React"],
-    link: "https://github.com/dittowashunted",
+    title: "DittoGames",
+    description: "A site of classic games and polls: play multiplayer favorites like Tic Tac Toe and Connect Four with a friend, or go solo with Snake, 2048, and Minesweeper.",
+    tags: ["React", "JavaScript", "Multiplayer"],
+    link: "https://ditto-games.netlify.app",
   },
   {
     title: "Project Two",
